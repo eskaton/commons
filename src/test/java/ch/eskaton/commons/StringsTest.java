@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import ch.eskaton.commons.StringUtils;
+import ch.eskaton.commons.utils.StringUtils;
 
 public class StringsTest {
 

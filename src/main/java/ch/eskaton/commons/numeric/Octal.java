@@ -4,7 +4,7 @@
 package ch.eskaton.commons.numeric;
 
 /**
- * Hilfsklasse zur Umwandlung von Dezimal- in Oktalzahlen und umgekehrt.
+ * Utility to work with octal strings.
  */
 public final class Octal {
 
@@ -16,11 +16,11 @@ public final class Octal {
     }
 
     /**
-     * Wandelt eine Oktal- in eine Dezimalzahl um.
+     * Translates octal to decimal
      * 
      * @param octal
-     *            Eine Oktalzahl
-     * @return Die entsprechende Dezimalzahl
+     *            An octal number
+     * @return decimal number
      * @throws ConversionNotSupportedException
      */
     public static double octal2decimal(final String octal)
@@ -36,11 +36,11 @@ public final class Octal {
     }
 
     /**
-     * Wandelt eine Dezimal- in eine Oktalzahl um.
+     * Translates decimal to octal.
      * 
      * @param dec
-     *            Eine Dezimalzahl
-     * @return Die entsprechende Oktalzahl
+     *            A decimal number
+     * @return hex number
      * @throws ConversionNotSupportedException
      */
     public static String decimal2octal(final double dec)

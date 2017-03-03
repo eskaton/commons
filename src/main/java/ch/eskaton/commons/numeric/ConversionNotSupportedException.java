@@ -4,8 +4,7 @@
 package ch.eskaton.commons.numeric;
 
 /**
- * Exception die geworfen wird, wenn eine Umwandlung zwischen zwei
- * Zahlensystemen nicht moeglich ist.
+ * Exception to be thrown if conversion between number systems is not possible.
  */
 @SuppressWarnings("serial")
 public class ConversionNotSupportedException extends Exception {

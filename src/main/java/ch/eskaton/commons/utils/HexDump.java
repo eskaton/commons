@@ -25,7 +25,7 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ch.eskaton.commons;
+package ch.eskaton.commons.utils;
 
 import java.io.IOException;
 import java.io.StringWriter;

@@ -25,7 +25,7 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ch.eskaton.commons;
+package ch.eskaton.commons.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

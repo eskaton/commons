@@ -24,32 +24,162 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package ch.eskaton.commons.utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-public class ReflectionUtils {
+public final class ReflectionUtils {
 
-	private ReflectionUtils() {
-	}
+    private ReflectionUtils() {
+    }
 
-	public static <T extends Annotation> T getAnnotation(Field field,
-			Class<T> annotationClass) {
-		T annotation = field.getAnnotation(annotationClass);
+    public static <T extends Annotation> T getAnnotation(Field field,
+            Class<T> annotationClass) {
+        T annotation = field.getAnnotation(annotationClass);
 
-		if (annotation == null) {
-			Class<?> clazz = field.getType();
+        if (annotation == null) {
+            Class<?> clazz = field.getType();
 
-			do {
-				annotation = clazz.getAnnotation(annotationClass);
-			} while (annotation == null
-					&& (clazz = clazz.getSuperclass()) != null);
+            do {
+                annotation = clazz.getAnnotation(annotationClass);
+            } while (annotation == null
+                    && (clazz = clazz.getSuperclass()) != null);
 
-		}
+        }
 
-		return annotation;
-	}
+        return annotation;
+    }
+
+    private static Class<?>[] getParameterTypes(Object[] parameters) {
+        Class<?>[] paramTypes = new Class<?>[parameters.length];
+
+        for (int i = 0; i < parameters.length; i++) {
+            paramTypes[i] = parameters[i].getClass();
+        }
+
+        return paramTypes;
+    }
+
+    private static boolean parameterTypesMatch(Method method,
+            Class<?>[] paramTypes) {
+        Class<?>[] methodParamTypes = method.getParameterTypes();
+
+        if (methodParamTypes.length != paramTypes.length) {
+            return false;
+        }
+
+        for (int i = 0; i < methodParamTypes.length; i++) {
+            // TODO: primitive types
+            if (!methodParamTypes[i].isAssignableFrom(paramTypes[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static Object invokeMethod(Object obj, String method,
+            Object[] parameters) throws IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException {
+        Class<?>[] paramTypes = getParameterTypes(parameters);
+        Method[] methods = obj.getClass().getDeclaredMethods();
+
+        for (int i = 0; i < methods.length; ++i) {
+            if (methods[i].getName().equals(method)
+                    && parameterTypesMatch(methods[i], paramTypes)) {
+                return methods[i].invoke(obj, parameters);
+            }
+        }
+
+        return null;
+    }
+
+    public static Object invokePrivateMethod(Object obj, String method,
+            Object[] parameters) throws IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException {
+        Class<?>[] paramTypes = getParameterTypes(parameters);
+        Method[] methods = obj.getClass().getDeclaredMethods();
+
+        for (int i = 0; i < methods.length; ++i) {
+            if (methods[i].getName().equals(method)
+                    && parameterTypesMatch(methods[i], paramTypes)) {
+                methods[i].setAccessible(true);
+                return methods[i].invoke(obj, parameters);
+            }
+        }
+
+        return null;
+    }
+
+    public static Object invokeStaticMethod(Class<?> clazz, String method,
+            Object[] parameters, Class<?>[] paramTypes)
+            throws IllegalAccessException, InvocationTargetException {
+        Method[] methods = clazz.getDeclaredMethods();
+
+        for (int i = 0; i < methods.length; ++i) {
+            if (methods[i].getName().equals(method)
+                    && parameterTypesMatch(methods[i], paramTypes)) {
+                return methods[i].invoke(null, parameters);
+            }
+        }
+
+        return null;
+    }
+
+    public static Object invokeStaticMethod(Class<?> clazz, String method,
+            Object[] parameters) throws IllegalAccessException,
+            InvocationTargetException {
+        return invokeStaticMethod(clazz, method, parameters,
+                getParameterTypes(parameters));
+    }
+
+    public static Object invokeStaticPrivateMethod(Class<?> clazz,
+            String method, Object[] parameters) throws IllegalAccessException,
+            InvocationTargetException {
+        Class<?>[] paramTypes = getParameterTypes(parameters);
+        Method[] methods = clazz.getDeclaredMethods();
+
+        for (int i = 0; i < methods.length; ++i) {
+            if (methods[i].getName().equals(method)
+                    && parameterTypesMatch(methods[i], paramTypes)) {
+                methods[i].setAccessible(true);
+                return methods[i].invoke(null, parameters);
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean extendsClazz(Class<?> clazz, Class<?> parent) {
+        do {
+            if (clazz.equals(parent)) {
+                return true;
+            }
+        } while ((clazz = clazz.getSuperclass()) != null);
+
+        return false;
+    }
+
+    public static boolean implementsInterface(Class<?> clazz, Class<?> parent) {
+        for (Class<?> interf : clazz.getInterfaces()) {
+            if (interf.equals(parent)) {
+                return true;
+            } else if (implementsInterface(interf, parent)) {
+                return true;
+            }
+        }
+
+        clazz = clazz.getSuperclass();
+
+        if (clazz == null) {
+            return false;
+        }
+
+        return implementsInterface(clazz, parent);
+    }
+
 
 }

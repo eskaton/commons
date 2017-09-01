@@ -24,40 +24,55 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package ch.eskaton.commons.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
-public class CollectionUtils {
+public final class CollectionUtils {
 
-	public static <T, U> List<T> map(Collection<U> col, Mapper<U, T> mapper) {
-		List<T> list = new ArrayList<T>(col.size());
+    private CollectionUtils() {
+    }
 
-		for (U value : col) {
-			list.add(mapper.map(value));
-		}
+    public static <T, U> List<T> map(Collection<U> col, Mapper<U, T> mapper) {
+        List<T> list = new ArrayList<T>(col.size());
+ 
+        for (U value : col) {
+           list.add(mapper.map(value));
+        }
 
-		return list;
-	}
+        return list;
+     }
 
-	public interface Mapper<U, T> {
-		T map(U value);
-	}
+     public interface Mapper<U, T> {
+        T map(U value);
+     }
 
-	public static <T, U> T foldr(Collection<U> col, T accumulator,
-			Folder<U, T> folder) {
-		for (U value : col) {
-			accumulator = folder.fold(accumulator, value);
-		}
+     public static <T, U> T foldr(Collection<U> col, T accumulator,
+           Folder<U, T> folder) {
+        for (U value : col) {
+           accumulator = folder.fold(accumulator, value);
+        }
 
-		return accumulator;
-	}
+        return accumulator;
+     }
 
-	public interface Folder<U, T> {
-		T fold(T accumulator, U value);
-	}
+     public interface Folder<U, T> {
+        T fold(T accumulator, U value);
+     }
+
+     public static String join(final Collection<?> c, final String glue) {
+         Iterator<?> it = c.iterator();
+         StringBuilder sb = new StringBuilder();
+
+         while (it.hasNext()) {
+             sb.append(sb.length() > 0 ? glue + it.next().toString() : it.next()
+                     .toString());
+         }
+
+         return sb.toString();
+     }
 
 }

@@ -122,6 +122,7 @@ public final class StringUtils {
 	public static String initCap(String s) {
 		if (s != null) {
 			char c = s.charAt(0);
+
 			if (c >= 0x61 && c <= 0x7a) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(c &= ~0x20);
@@ -129,7 +130,12 @@ public final class StringUtils {
 				return sb.toString();
 			}
 		}
+
 		return s;
 	}
+
+    public static String dquote(String s) {
+	    return '"' + s + '"';
+    }
 
 }

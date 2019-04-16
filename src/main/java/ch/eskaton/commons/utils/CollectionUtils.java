@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2013, Adrian Moser
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *  * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
  *  * Neither the name of the author nor the
  *  names of its contributors may be used to endorse or promote products
  *  derived from this software without specific prior written permission.
- * 
+ *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -27,9 +27,11 @@
 package ch.eskaton.commons.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.HashSet;
 
 public final class CollectionUtils {
 
@@ -38,7 +40,7 @@ public final class CollectionUtils {
 
     public static <T, U> List<T> map(Collection<U> col, Mapper<U, T> mapper) {
         List<T> list = new ArrayList<T>(col.size());
- 
+
         for (U value : col) {
            list.add(mapper.map(value));
         }
@@ -74,5 +76,23 @@ public final class CollectionUtils {
 
          return sb.toString();
      }
+
+    public static <T> HashSet<T> asHashSet(Collection<T> c) {
+        HashSet<T> set = new HashSet<T>();
+
+        if (c != null) {
+            set.addAll(c);
+        }
+
+        return set;
+    }
+
+    public static <T> HashSet<T> asHashSet(T... c) {
+        HashSet<T> set = new HashSet<T>();
+
+        set.addAll(Arrays.asList(c));
+
+        return set;
+    }
 
 }

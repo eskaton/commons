@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2013, Adrian Moser
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *  * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
  *  * Neither the name of the author nor the
  *  names of its contributors may be used to endorse or promote products
  *  derived from this software without specific prior written permission.
- * 
+ *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -27,25 +27,22 @@
 
 package ch.eskaton.commons;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Test;
 
-import ch.eskaton.commons.utils.StringUtils;
+public class StringUtilsTest {
 
-public class StringsTest {
+    @Test
+    public void testInject() {
+        Assert.assertEquals("a,xb,x", ch.eskaton.commons.utils.StringUtils.inject("a,b,", ",", "x"));
+        Assert.assertEquals("a,xb,xc", ch.eskaton.commons.utils.StringUtils.inject("a,b,c", ",", "x"));
+        Assert.assertEquals("ab", ch.eskaton.commons.utils.StringUtils.inject("ab", ",", "x"));
+    }
 
-	@Test
-	public void testInject() {
-		assertEquals("a,xb,x", StringUtils.inject("a,b,", ",", "x"));
-		assertEquals("a,xb,xc", StringUtils.inject("a,b,c", ",", "x"));
-		assertEquals("ab", StringUtils.inject("ab", ",", "x"));
-	}
-
-	@Test
-	public void testPadLeft() {
-		assertEquals("a", StringUtils.padLeft("a", 'x', 0));
-		assertEquals("a", StringUtils.padLeft("a", 'x', 0));
-	}
+    @Test
+    public void testPadLeft() {
+        Assert.assertEquals("a", ch.eskaton.commons.utils.StringUtils.padLeft("a", 'x', 0));
+        Assert.assertEquals("a", ch.eskaton.commons.utils.StringUtils.padLeft("a", 'x', 0));
+    }
 
 }

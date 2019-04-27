@@ -81,35 +81,34 @@ public final class ReflectionUtils {
         return true;
     }
 
-    public static Object invokeMethod(Object obj, String method,
-            Object[] parameters) throws IllegalAccessException,
+    public static Object invokeMethod(Object obj, String method, Object[] parameters) throws IllegalAccessException,
             IllegalArgumentException, InvocationTargetException {
-        Class<?>[] paramTypes = getParameterTypes(parameters);
-        Method[] methods = obj.getClass().getDeclaredMethods();
-
-        for (int i = 0; i < methods.length; ++i) {
-            if (methods[i].getName().equals(method)
-                    && parameterTypesMatch(methods[i], paramTypes)) {
-                return methods[i].invoke(obj, parameters);
-            }
-        }
-
-        return null;
+        return invokeMethod(obj, method, parameters, false);
     }
 
-    public static Object invokePrivateMethod(Object obj, String method,
-            Object[] parameters) throws IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
-        Class<?>[] paramTypes = getParameterTypes(parameters);
-        Method[] methods = obj.getClass().getDeclaredMethods();
+    public static Object invokePrivateMethod(Object obj, String method, Object[] parameters)
+            throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        return invokeMethod(obj, method, parameters, true);
+    }
 
-        for (int i = 0; i < methods.length; ++i) {
-            if (methods[i].getName().equals(method)
-                    && parameterTypesMatch(methods[i], paramTypes)) {
-                methods[i].setAccessible(true);
-                return methods[i].invoke(obj, parameters);
+    private static Object invokeMethod(Object obj, String method, Object[] parameters, boolean makeAccessible)
+            throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Class<?>[] paramTypes = getParameterTypes(parameters);
+        Class<?> clazz = obj.getClass();
+
+        do {
+            Method[] methods = clazz.getDeclaredMethods();
+
+            for (int i = 0; i < methods.length; ++i) {
+                if (methods[i].getName().equals(method) && parameterTypesMatch(methods[i], paramTypes)) {
+                    if (makeAccessible) {
+                        methods[i].setAccessible(true);
+                    }
+
+                    return methods[i].invoke(obj, parameters);
+                }
             }
-        }
+        } while ((clazz = clazz.getSuperclass()) != null);
 
         return null;
     }

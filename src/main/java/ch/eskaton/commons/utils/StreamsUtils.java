@@ -32,6 +32,7 @@ import ch.eskaton.commons.collections.Tuple2;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class StreamsUtils {
 
@@ -42,6 +43,15 @@ public class StreamsUtils {
         Iterator<Integer> it = IntStream.range(startIdx, Integer.MAX_VALUE).boxed().iterator();
 
         return stream.map(o -> new Tuple2<>(it.next(), o));
+    }
+
+    public static <T> Stream<T> of(Iterator<T> iterator) {
+        Iterable<T> iterable = () -> iterator;
+        return StreamSupport.stream(iterable.spliterator(), false);
+    }
+
+    public static IntStream toIntStream(byte[] bytes) {
+        return IntStream.range(0, bytes.length).map(i -> bytes[i]);
     }
 
 }

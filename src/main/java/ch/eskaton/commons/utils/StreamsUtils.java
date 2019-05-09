@@ -25,24 +25,23 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ch.eskaton.commons;
+package ch.eskaton.commons.utils;
 
-import org.junit.Assert;
-import org.junit.Test;
+import ch.eskaton.commons.collections.Tuple2;
 
-public class StringUtilsTest {
+import java.util.Iterator;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-    @Test
-    public void testInject() {
-        Assert.assertEquals("a,xb,x", ch.eskaton.commons.utils.StringUtils.inject("a,b,", ",", "x"));
-        Assert.assertEquals("a,xb,xc", ch.eskaton.commons.utils.StringUtils.inject("a,b,c", ",", "x"));
-        Assert.assertEquals("ab", ch.eskaton.commons.utils.StringUtils.inject("ab", ",", "x"));
+public class StreamsUtils {
+
+    private StreamsUtils() {
     }
 
-    @Test
-    public void testPadLeft() {
-        Assert.assertEquals("a", ch.eskaton.commons.utils.StringUtils.padLeft("a", 'x', 0));
-        Assert.assertEquals("a", ch.eskaton.commons.utils.StringUtils.padLeft("a", 'x', 0));
+    public static <T> Stream<Tuple2<Integer,T>> zipWithIndex(int startIdx, Stream<T> stream) {
+        Iterator<Integer> it = IntStream.range(startIdx, Integer.MAX_VALUE).boxed().iterator();
+
+        return stream.map(o -> new Tuple2<>(it.next(), o));
     }
 
 }

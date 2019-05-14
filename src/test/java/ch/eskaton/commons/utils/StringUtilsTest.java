@@ -54,22 +54,35 @@
 
 package ch.eskaton.commons.utils;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static ch.eskaton.commons.utils.StringUtils.inject;
+import static ch.eskaton.commons.utils.StringUtils.isEmpty;
+import static ch.eskaton.commons.utils.StringUtils.padLeft;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class StringUtilsTest {
 
     @Test
     public void testInject() {
-        Assert.assertEquals("a,xb,x", ch.eskaton.commons.utils.StringUtils.inject("a,b,", ",", "x"));
-        Assert.assertEquals("a,xb,xc", ch.eskaton.commons.utils.StringUtils.inject("a,b,c", ",", "x"));
-        Assert.assertEquals("ab", ch.eskaton.commons.utils.StringUtils.inject("ab", ",", "x"));
+        assertEquals("a,xb,x", inject("a,b,", ",", "x"));
+        assertEquals("a,xb,xc", inject("a,b,c", ",", "x"));
+        assertEquals("ab", inject("ab", ",", "x"));
     }
 
     @Test
     public void testPadLeft() {
-        Assert.assertEquals("a", ch.eskaton.commons.utils.StringUtils.padLeft("a", 'x', 0));
-        Assert.assertEquals("a", ch.eskaton.commons.utils.StringUtils.padLeft("a", 'x', 0));
+        assertEquals("a", padLeft("a", 'x', 0));
+        assertEquals("a", padLeft("a", 'x', 0));
+    }
+
+    @Test
+    public void testIsEmpty() {
+        assertTrue(isEmpty(null));
+        assertTrue(isEmpty(""));
+        assertFalse(isEmpty(" "));
     }
 
 }

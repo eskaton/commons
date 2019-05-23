@@ -32,13 +32,11 @@ import java.util.Map;
 
 public class Maps {
 
-    public static <K, V> Builder<K, V> builder() throws IllegalAccessException,
-            InstantiationException {
+    public static <K, V> Builder<K, V> builder() {
         return new Builder(HashMap.class);
     }
 
-    public static <K, V> Builder<K, V> builder(Class<? extends Map> clazz) throws IllegalAccessException,
-            InstantiationException {
+    public static <K, V> Builder<K, V> builder(Class<? extends Map> clazz) {
         return new Builder(clazz);
     }
 
@@ -46,8 +44,12 @@ public class Maps {
 
         private Map<K, V> map;
 
-        public Builder(Class<HashMap> clazz) throws IllegalAccessException, InstantiationException {
-            map = clazz.newInstance();
+        public Builder(Class<HashMap> clazz) {
+            try {
+                map = clazz.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         public Builder<K, V> put(K key, V value) {

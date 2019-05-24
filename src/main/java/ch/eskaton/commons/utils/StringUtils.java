@@ -29,6 +29,7 @@ package ch.eskaton.commons.utils;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -138,7 +139,11 @@ public final class StringUtils {
     }
 
     public static String ifPresent(Object obj, String str) {
-        return Optional.ofNullable(obj).map(o -> str).orElse("");
+        return ifPresent(obj, o -> str);
+    }
+
+    public static String ifPresent(Object obj, Function<Object, String> mapper) {
+        return Optional.ofNullable(obj).map(mapper::apply).orElse("");
     }
 
 }

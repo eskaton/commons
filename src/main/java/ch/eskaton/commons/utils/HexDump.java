@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2013, Adrian Moser
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *  * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
  *  * Neither the name of the author nor the
  *  names of its contributors may be used to endorse or promote products
  *  derived from this software without specific prior written permission.
- * 
+ *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -32,107 +32,111 @@ import java.io.Writer;
 
 public class HexDump {
 
-	private static final int BYTES_PER_WORD = 4;
+    private static final int BYTES_PER_WORD = 4;
 
-	private static final int BYTES_PER_LINE = 4 * BYTES_PER_WORD;
+    private static final int BYTES_PER_LINE = 4 * BYTES_PER_WORD;
 
-	public static String toHexString(byte buf[]) {
-		StringBuilder sb = new StringBuilder();
+    public static String toHexString(byte buf[]) {
+        StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < buf.length; i++) {
-			sb.append(String.format("%02x", buf[i]));
-		}
+        for (int i = 0; i < buf.length; i++) {
+            sb.append(String.format("%02x", buf[i]));
+        }
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	public static String dumpToString(byte buf[]) throws IOException {
-		StringWriter sw = new StringWriter();
-		dump(sw, buf);
-		return sw.toString();
-	}
+    public static String toHexString(byte b) {
+        return String.format("%02x", b);
+    }
 
-	public static String dumpToString(byte buf[], int offset, int len)
-			throws IOException {
-		StringWriter sw = new StringWriter();
-		dump(sw, buf, offset, len);
-		return sw.toString();
-	}
+    public static String dumpToString(byte buf[]) throws IOException {
+        StringWriter sw = new StringWriter();
+        dump(sw, buf);
+        return sw.toString();
+    }
 
-	public static void dump(Writer w, byte buf[]) throws IOException {
-		dump(w, buf, 0, buf.length);
-	}
+    public static String dumpToString(byte buf[], int offset, int len)
+            throws IOException {
+        StringWriter sw = new StringWriter();
+        dump(sw, buf, offset, len);
+        return sw.toString();
+    }
 
-	public static void dump(Writer w, byte buf[], int offset, int len)
-			throws IOException {
-		int lines = len / BYTES_PER_LINE;
-		int last_len = len % BYTES_PER_LINE;
-		int addr_len = (int) Math.floor(Math.log(len)
-				/ Math.log(BYTES_PER_LINE) + 1);
-		int addr = offset;
+    public static void dump(Writer w, byte buf[]) throws IOException {
+        dump(w, buf, 0, buf.length);
+    }
 
-		for (int i = 0; i < lines; i++) {
-			dumpLine(w, buf, addr, addr_len, BYTES_PER_LINE);
-			addr += BYTES_PER_LINE;
-		}
+    public static void dump(Writer w, byte buf[], int offset, int len)
+            throws IOException {
+        int lines = len / BYTES_PER_LINE;
+        int last_len = len % BYTES_PER_LINE;
+        int addr_len = (int) Math.floor(Math.log(len)
+                / Math.log(BYTES_PER_LINE) + 1);
+        int addr = offset;
 
-		if (last_len > 0) {
-			dumpLine(w, buf, addr, addr_len, last_len);
-		}
+        for (int i = 0; i < lines; i++) {
+            dumpLine(w, buf, addr, addr_len, BYTES_PER_LINE);
+            addr += BYTES_PER_LINE;
+        }
 
-		w.flush();
-	}
+        if (last_len > 0) {
+            dumpLine(w, buf, addr, addr_len, last_len);
+        }
 
-	private static void dumpLine(Writer w, byte[] buf, int addr, int addr_len,
-			int len) throws IOException {
-		int words = len / BYTES_PER_WORD;
-		int last_word = len % BYTES_PER_WORD;
-		int pos = addr;
-		int line_pos = 0;
+        w.flush();
+    }
 
-		String format = String.format("%%0%dx", addr_len);
+    private static void dumpLine(Writer w, byte[] buf, int addr, int addr_len,
+            int len) throws IOException {
+        int words = len / BYTES_PER_WORD;
+        int last_word = len % BYTES_PER_WORD;
+        int pos = addr;
+        int line_pos = 0;
 
-		w.append(String.format(format, addr)).append(" ");
+        String format = String.format("%%0%dx", addr_len);
 
-		for (int i = 0; i < words; i++) {
-			line_pos += dumpWord(w, buf, pos, BYTES_PER_WORD);
-			pos += BYTES_PER_WORD;
-		}
+        w.append(String.format(format, addr)).append(" ");
 
-		if (last_word > 0) {
-			line_pos += dumpWord(w, buf, pos, last_word);
-		}
+        for (int i = 0; i < words; i++) {
+            line_pos += dumpWord(w, buf, pos, BYTES_PER_WORD);
+            pos += BYTES_PER_WORD;
+        }
 
-		format = String.format("%%%ds", BYTES_PER_LINE * 2 + BYTES_PER_LINE
-				/ BYTES_PER_WORD - line_pos + 2);
+        if (last_word > 0) {
+            line_pos += dumpWord(w, buf, pos, last_word);
+        }
 
-		w.append(String.format(format, "| "));
+        format = String.format("%%%ds", BYTES_PER_LINE * 2 + BYTES_PER_LINE
+                / BYTES_PER_WORD - line_pos + 2);
 
-		for (int i = 0; i < len; i++) {
-			Character c = Character.valueOf((char) buf[addr + i]);
-			if (Character.isISOControl(c)) {
-				w.append(".");
-			} else {
-				w.append(Character.valueOf((char) buf[addr + i]));
-			}
-		}
+        w.append(String.format(format, "| "));
 
-		w.append("\n");
-	}
+        for (int i = 0; i < len; i++) {
+            Character c = Character.valueOf((char) buf[addr + i]);
+            if (Character.isISOControl(c)) {
+                w.append(".");
+            } else {
+                w.append(Character.valueOf((char) buf[addr + i]));
+            }
+        }
 
-	private static int dumpWord(Writer w, byte[] buf, int pos, int bytesPerWord)
-			throws IOException {
-		int i;
-		int word_len = 0;
+        w.append("\n");
+    }
 
-		for (i = 0; i < bytesPerWord; i++) {
-			w.append(String.format("%02x", buf[pos + i]));
-			word_len += 2;
-		}
+    private static int dumpWord(Writer w, byte[] buf, int pos, int bytesPerWord)
+            throws IOException {
+        int i;
+        int word_len = 0;
 
-		w.append(" ");
+        for (i = 0; i < bytesPerWord; i++) {
+            w.append(String.format("%02x", buf[pos + i]));
+            word_len += 2;
+        }
 
-		return word_len + 1;
-	}
+        w.append(" ");
+
+        return word_len + 1;
+    }
 
 }

@@ -57,6 +57,7 @@ package ch.eskaton.commons.utils;
 import org.junit.Test;
 
 import static ch.eskaton.commons.utils.CollectionUtils.asHashSet;
+import static ch.eskaton.commons.utils.StringUtils.*;
 import static ch.eskaton.commons.utils.StringUtils.inject;
 import static ch.eskaton.commons.utils.StringUtils.isEmpty;
 import static ch.eskaton.commons.utils.StringUtils.join;
@@ -103,17 +104,17 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testToString() {
-        assertThat(StringUtils.toString(null), equalTo(""));
-        assertThat(StringUtils.toString(null, "null"), equalTo("null"));
-        assertThat(StringUtils.toString(1), equalTo("1"));
-        assertThat(StringUtils.toString(1, "one"), equalTo("1"));
+    public void testAsString() {
+        assertThat(asString(null), equalTo(""));
+        assertThat(asString(null, "null"), equalTo("null"));
+        assertThat(asString(1), equalTo("1"));
+        assertThat(asString(1, "one"), equalTo("1"));
     }
 
     @Test
     public void testIfPresent() {
-        assertThat(StringUtils.ifPresent(null, "null"), equalTo(""));
-        assertThat(StringUtils.ifPresent(1, "one"), equalTo("one"));
+        assertThat(ifPresent(null, "null"), equalTo(""));
+        assertThat(ifPresent(1, "one"), equalTo("one"));
     }
 
 }

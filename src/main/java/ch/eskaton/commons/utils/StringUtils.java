@@ -129,11 +129,11 @@ public final class StringUtils {
         return false;
     }
 
-    public static String toString(Object obj) {
-        return toString(obj, "");
+    public static String asString(Object obj) {
+        return asString(obj, "");
     }
 
-    public static String toString(Object obj, String subst) {
+    public static String asString(Object obj, String subst) {
         return obj != null ? String.valueOf(obj) : subst;
     }
 

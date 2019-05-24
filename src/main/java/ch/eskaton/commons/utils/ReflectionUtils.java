@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2013, Adrian Moser
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *  * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
  *  * Neither the name of the author nor the
  *  names of its contributors may be used to endorse or promote products
  *  derived from this software without specific prior written permission.
- * 
+ *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,10 +26,14 @@
  */
 package ch.eskaton.commons.utils;
 
+import ch.eskaton.commons.collections.Tuple2;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class ReflectionUtils {
 
@@ -82,17 +86,17 @@ public final class ReflectionUtils {
     }
 
     public static Object invokeMethod(Object obj, String method, Object[] parameters) throws IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
+            InvocationTargetException {
         return invokeMethod(obj, method, parameters, false);
     }
 
     public static Object invokePrivateMethod(Object obj, String method, Object[] parameters)
-            throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            throws IllegalAccessException, InvocationTargetException {
         return invokeMethod(obj, method, parameters, true);
     }
 
     private static Object invokeMethod(Object obj, String method, Object[] parameters, boolean makeAccessible)
-            throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            throws IllegalAccessException, InvocationTargetException {
         Class<?>[] paramTypes = getParameterTypes(parameters);
         Class<?> clazz = obj.getClass();
 
@@ -164,9 +168,7 @@ public final class ReflectionUtils {
 
     public static boolean implementsInterface(Class<?> clazz, Class<?> parent) {
         for (Class<?> interf : clazz.getInterfaces()) {
-            if (interf.equals(parent)) {
-                return true;
-            } else if (implementsInterface(interf, parent)) {
+            if (interf.equals(parent) || implementsInterface(interf, parent)) {
                 return true;
             }
         }
@@ -180,5 +182,22 @@ public final class ReflectionUtils {
         return implementsInterface(clazz, parent);
     }
 
+    public static List<Tuple2<String, Object>> getProperties(Object obj) throws IllegalAccessException {
+        List<Tuple2<String, Object>> properties = new ArrayList<>();
+        Class<?> clazz = obj.getClass();
+
+        do {
+            Field[] fields = clazz.getDeclaredFields();
+
+            for (Field field : fields) {
+                field.setAccessible(true);
+
+                properties.add(new Tuple2<>(field.getName(), field.get(obj)));
+            }
+
+        } while ((clazz = clazz.getSuperclass()) != null && !Object.class.equals(clazz));
+
+        return properties;
+    }
 
 }

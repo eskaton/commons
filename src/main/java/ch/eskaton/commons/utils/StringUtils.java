@@ -28,6 +28,7 @@ package ch.eskaton.commons.utils;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -134,6 +135,10 @@ public final class StringUtils {
 
     public static String toString(Object obj, String subst) {
         return obj != null ? String.valueOf(obj) : subst;
+    }
+
+    public static String ifPresent(Object obj, String str) {
+        return Optional.ofNullable(obj).map(o -> str).orElse("");
     }
 
 }

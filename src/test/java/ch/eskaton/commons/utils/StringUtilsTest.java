@@ -110,4 +110,10 @@ public class StringUtilsTest {
         assertThat(StringUtils.toString(1, "one"), equalTo("1"));
     }
 
+    @Test
+    public void testIfPresent() {
+        assertThat(StringUtils.ifPresent(null, "null"), equalTo(""));
+        assertThat(StringUtils.ifPresent(1, "one"), equalTo("one"));
+    }
+
 }

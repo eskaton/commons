@@ -56,11 +56,16 @@ package ch.eskaton.commons.utils;
 
 import org.junit.Test;
 
+import static ch.eskaton.commons.utils.CollectionUtils.asHashSet;
 import static ch.eskaton.commons.utils.StringUtils.inject;
 import static ch.eskaton.commons.utils.StringUtils.isEmpty;
+import static ch.eskaton.commons.utils.StringUtils.join;
 import static ch.eskaton.commons.utils.StringUtils.padLeft;
+import static java.util.Collections.emptySet;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class StringUtilsTest {
@@ -83,6 +88,26 @@ public class StringUtilsTest {
         assertTrue(isEmpty(null));
         assertTrue(isEmpty(""));
         assertFalse(isEmpty(" "));
+    }
+
+    @Test
+    public void testJoinArray() {
+        assertThat(join(new String[] {}, ", "), equalTo(""));
+        assertThat(join(new String[] { "a", "b", "c" }, ", "), equalTo("a, b, c"));
+    }
+
+    @Test
+    public void testJoinCollection() {
+        assertThat(join(emptySet(), ", "), equalTo(""));
+        assertThat(join(asHashSet("a", "b", "c"), ", "), equalTo("a, b, c"));
+    }
+
+    @Test
+    public void testToString() {
+        assertThat(StringUtils.toString(null), equalTo(""));
+        assertThat(StringUtils.toString(null, "null"), equalTo("null"));
+        assertThat(StringUtils.toString(1), equalTo("1"));
+        assertThat(StringUtils.toString(1, "one"), equalTo("1"));
     }
 
 }

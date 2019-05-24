@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2013, Adrian Moser
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *  * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
  *  * Neither the name of the author nor the
  *  names of its contributors may be used to endorse or promote products
  *  derived from this software without specific prior written permission.
- * 
+ *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,124 +26,114 @@
  */
 package ch.eskaton.commons.utils;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static java.util.Arrays.asList;
 
 public final class StringUtils {
 
-	private StringUtils() {
-	}
+    private StringUtils() {
+    }
 
-	public static String inject(String s, String where, String val) {
-		return join(s.split(where, -1), where + val);
-	}
+    public static String inject(String s, String where, String val) {
+        return join(s.split(where, -1), where + val);
+    }
 
-	public static String padLeft(String s, char c, int len) {
-		if (s.length() >= len) {
-			return s;
-		}
+    public static String padLeft(String s, char c, int len) {
+        if (s.length() >= len) {
+            return s;
+        }
 
-		StringBuilder sb = new StringBuilder(len);
+        StringBuilder sb = new StringBuilder(len);
 
-		sb.append(s);
+        sb.append(s);
 
-		while (sb.length() != len) {
-			sb.insert(0, c);
-		}
+        while (sb.length() != len) {
+            sb.insert(0, c);
+        }
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	public static String join(Object[] strs, String glue) {
-		StringBuilder sb = new StringBuilder();
-		boolean first = true;
+    public static String join(Object[] objects, String glue) {
+        return join(asList(objects), glue);
+    }
 
-		for (Object s : strs) {
-			if (first) {
-				first = false;
-			} else {
-				sb.append(glue);
-			}
-			sb.append(s);
-		}
 
-		return sb.toString();
-	}
+    public static String join(Iterable<?> objects, String glue) {
+        return StreamSupport.stream(objects.spliterator(), false)
+                .map(Object::toString)
+                .collect(Collectors.joining(glue));
+    }
 
-	public static String join(Collection<?> list, String glue) {
-		StringBuilder sb = new StringBuilder();
-		boolean first = true;
+    public static String join(Map<String, String> map, String nvGlue,
+            String entryGlue) {
+        StringBuilder sb = new StringBuilder();
 
-		for (Object s : list) {
-			if (first) {
-				first = false;
-			} else {
-				sb.append(glue);
-			}
-			sb.append(s);
-		}
+        for (Entry<String, String> entry : map.entrySet()) {
+            if (sb.length() > 0) {
+                sb.append(entryGlue);
+            }
+            sb.append(entry.getKey()).append(nvGlue).append(entry.getValue());
+        }
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	public static String join(Map<String, String> map, String nvGlue,
-			String entryGlue) {
-		StringBuilder sb = new StringBuilder();
+    public static String repeat(String s, int i) {
+        StringBuilder sb = new StringBuilder();
+        while (i-- > 0) {
+            sb.append(s);
+        }
+        return sb.toString();
+    }
 
-		for (Entry<String, String> entry : map.entrySet()) {
-			if (sb.length() > 0) {
-				sb.append(entryGlue);
-			}
-			sb.append(entry.getKey()).append(nvGlue).append(entry.getValue());
-		}
+    public static String concat(Object... objs) {
+        StringBuilder sb = new StringBuilder();
 
-		return sb.toString();
-	}
+        for (Object str : objs) {
+            sb.append(str);
+        }
 
-	public static String repeat(String s, int i) {
-		StringBuilder sb = new StringBuilder();
-		while (i-- > 0) {
-			sb.append(s);
-		}
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	public static String concat(Object... objs) {
-		StringBuilder sb = new StringBuilder();
+    public static String initCap(String s) {
+        if (s != null) {
+            char c = s.charAt(0);
 
-		for (Object str : objs) {
-			sb.append(str);
-		}
+            if (c >= 0x61 && c <= 0x7a) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(c &= ~0x20);
+                sb.append(s.substring(1));
+                return sb.toString();
+            }
+        }
 
-		return sb.toString();
-	}
-
-	public static String initCap(String s) {
-		if (s != null) {
-			char c = s.charAt(0);
-
-			if (c >= 0x61 && c <= 0x7a) {
-				StringBuilder sb = new StringBuilder();
-				sb.append(c &= ~0x20);
-				sb.append(s.substring(1));
-				return sb.toString();
-			}
-		}
-
-		return s;
-	}
+        return s;
+    }
 
     public static String dquote(String s) {
-	    return '"' + s + '"';
+        return '"' + s + '"';
     }
 
     public static boolean isEmpty(String s) {
-	    if (s == null || s.length() == 0) {
-	        return true;
+        if (s == null || s.length() == 0) {
+            return true;
         }
 
         return false;
+    }
+
+    public static String toString(Object obj) {
+        return toString(obj, "");
+    }
+
+    public static String toString(Object obj, String subst) {
+        return obj != null ? String.valueOf(obj) : subst;
     }
 
 }

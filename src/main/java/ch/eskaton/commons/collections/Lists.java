@@ -27,58 +27,53 @@
 
 package ch.eskaton.commons.collections;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Comparator;
+import java.util.List;
 
-public class Sets {
+public class Lists {
 
-    public static <V> Sets.Builder<V> builder() {
-        return new Sets.Builder(HashSet.class);
+    public static <V> Lists.Builder<V> builder() {
+        return new Lists.Builder(ArrayList.class);
     }
 
-    public static <V> Sets.Builder<V> builder(Class<? extends Set> clazz) {
-        return new Sets.Builder(clazz);
+    public static <V> Lists.Builder<V> builder(Class<? extends List> clazz) {
+        return new Lists.Builder(clazz);
     }
 
     public static class Builder<V> {
 
-        private Set<V> set;
+        private List<V> list;
 
-        public Builder(Class<Set> clazz) {
+        public Builder(Class<List> clazz) {
             try {
-                set = clazz.newInstance();
+                list = clazz.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        public Sets.Builder<V> add(V value) {
-            set.add(value);
+        public Lists.Builder<V> add(V value) {
+            list.add(value);
 
             return this;
         }
 
-        public Sets.Builder<V> addAll(Collection<V> values) {
-            set.addAll(values);
+        public Lists.Builder<V> addAll(Collection<V> value) {
+            list.addAll(value);
 
             return this;
         }
 
-        public Builder<V> retainAll(Collection<V> values) {
-            set.retainAll(values);
+        public Builder<V> sorted(Comparator<V> comparator) {
+            list.sort(comparator);
 
             return this;
         }
 
-        public Builder<V> removeAll(Collection<V> values) {
-            set.removeAll(values);
-
-            return this;
-        }
-
-        public Set<V> build() {
-            return set;
+        public List<V> build() {
+            return list;
         }
 
     }

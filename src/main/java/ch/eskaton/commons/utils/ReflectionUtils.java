@@ -32,6 +32,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -191,11 +192,13 @@ public final class ReflectionUtils {
 
 
             for (Field field : fields) {
-                if (!field.isSynthetic()) {
-                    field.setAccessible(true);
-
-                    properties.add(new Tuple2<>(field.getName(), field.get(obj)));
+                if (field.isSynthetic() || Modifier.isStatic(field.getModifiers())) {
+                    continue;
                 }
+
+                field.setAccessible(true);
+
+                properties.add(new Tuple2<>(field.getName(), field.get(obj)));
             }
 
         } while ((clazz = clazz.getSuperclass()) != null && !Object.class.equals(clazz));

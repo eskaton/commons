@@ -57,6 +57,8 @@ public class ReflectionUtilsTest {
 
     private static class A {
 
+        private static final String C = "C";
+
         private String a = "a";
 
         private String b = "b";

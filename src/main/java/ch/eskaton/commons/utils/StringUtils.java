@@ -146,4 +146,8 @@ public final class StringUtils {
         return Optional.ofNullable(obj).map(mapper::apply).orElse("");
     }
 
+    public static String wrap(String str, String affix) {
+        return concat(affix, str, affix);
+    }
+
 }

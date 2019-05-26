@@ -189,10 +189,13 @@ public final class ReflectionUtils {
         do {
             Field[] fields = clazz.getDeclaredFields();
 
-            for (Field field : fields) {
-                field.setAccessible(true);
 
-                properties.add(new Tuple2<>(field.getName(), field.get(obj)));
+            for (Field field : fields) {
+                if (!field.isSynthetic()) {
+                    field.setAccessible(true);
+
+                    properties.add(new Tuple2<>(field.getName(), field.get(obj)));
+                }
             }
 
         } while ((clazz = clazz.getSuperclass()) != null && !Object.class.equals(clazz));

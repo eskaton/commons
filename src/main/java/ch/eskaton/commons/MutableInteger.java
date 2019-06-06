@@ -25,56 +25,60 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package ch.eskaton.commons.utils;
+package ch.eskaton.commons;
 
-import ch.eskaton.commons.collections.Tuple2;
+import java.util.Objects;
 
-import java.util.Iterator;
-import java.util.function.BiFunction;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+public class MutableInteger {
 
-public class StreamsUtils {
+    private int value;
 
-    private StreamsUtils() {
+    public MutableInteger(int value) {
+        this.value = value;
     }
 
-    public static <T> Stream<Tuple2<Integer,T>> zipWithIndex(int startIdx, Stream<T> stream) {
-        Iterator<Integer> it = IntStream.range(startIdx, Integer.MAX_VALUE).boxed().iterator();
-
-        return stream.map(o -> new Tuple2<>(it.next(), o));
+    public static MutableInteger of(int value) {
+        return new MutableInteger(value);
     }
 
-    public static <T, U, R> Stream<R> zip(Stream<T> stream1, Stream<U> stream2, BiFunction<T, U, R> zipper) {
-        Iterator<T> iterator1 = stream1.iterator();
-        Iterator<U> iterator2 = stream2.iterator();
-        Iterator<R> iterator = new Iterator<R>() {
-            @Override
-            public boolean hasNext() {
-                return iterator1.hasNext() && iterator2.hasNext();
-            }
-
-            @Override
-            public R next() {
-                return zipper.apply(iterator1.next(), iterator2.next());
-            }
-        };
-
-        return of(iterator);
+    public int getValue() {
+        return value;
     }
 
-    public static <T, U> Stream<Tuple2<T, U>> zip(Stream<T> stream1, Stream<U> stream2) {
-        return zip(stream1, stream2, Tuple2::of);
+    public void setValue(int value) {
+        this.value = value;
     }
 
-    public static <T> Stream<T> of(Iterator<T> iterator) {
-        Iterable<T> iterable = () -> iterator;
-        return StreamSupport.stream(iterable.spliterator(), false);
+    public MutableInteger increment() {
+        value++;
+
+        return this;
     }
 
-    public static IntStream toIntStream(byte[] bytes) {
-        return IntStream.range(0, bytes.length).map(i -> bytes[i]);
+    public MutableInteger decrement() {
+        value--;
+
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+
+        MutableInteger that = (MutableInteger) other;
+
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
 }

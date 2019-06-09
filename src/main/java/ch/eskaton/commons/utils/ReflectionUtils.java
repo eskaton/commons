@@ -86,6 +86,15 @@ public final class ReflectionUtils {
         return true;
     }
 
+    public static <V> V getPrivateFieldValue(Object obj, String fieldName) throws NoSuchFieldException,
+            IllegalAccessException {
+        Field field = obj.getClass().getDeclaredField(fieldName);
+
+        field.setAccessible(true);
+
+        return (V) field.get(obj);
+    }
+
     public static Object invokeMethod(Object obj, String method, Object[] parameters) throws IllegalAccessException,
             InvocationTargetException {
         return invokeMethod(obj, method, parameters, false);

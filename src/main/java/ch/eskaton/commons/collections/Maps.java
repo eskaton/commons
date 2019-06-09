@@ -58,6 +58,12 @@ public class Maps {
             return this;
         }
 
+        public Builder<K, V> putAll(Map<K, V> values) {
+            map.putAll(values);
+
+            return this;
+        }
+
         public Map<K, V> build() {
             return map;
         }

@@ -26,6 +26,7 @@
  */
 package ch.eskaton.commons.utils;
 
+import ch.eskaton.commons.collections.Maps;
 import ch.eskaton.commons.collections.Tuple2;
 
 import java.lang.annotation.Annotation;
@@ -35,8 +36,20 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class ReflectionUtils {
+
+    private static Map<Class<?>, Class<?>> primitives = Maps.<Class<?>, Class<?>>builder()
+            .put(boolean.class, Boolean.class)
+            .put(byte.class, Byte.class)
+            .put(char.class, Character.class)
+            .put(short.class, Short.class)
+            .put(int.class, Integer.class)
+            .put(long.class, Long.class)
+            .put(float.class, Float.class)
+            .put(double.class, Double.class)
+            .build();
 
     private ReflectionUtils() {
     }
@@ -68,8 +81,7 @@ public final class ReflectionUtils {
         return paramTypes;
     }
 
-    private static boolean parameterTypesMatch(Method method,
-            Class<?>[] paramTypes) {
+    private static boolean parameterTypesMatch(Method method, Class<?>[] paramTypes) {
         Class<?>[] methodParamTypes = method.getParameterTypes();
 
         if (methodParamTypes.length != paramTypes.length) {
@@ -77,8 +89,10 @@ public final class ReflectionUtils {
         }
 
         for (int i = 0; i < methodParamTypes.length; i++) {
-            // TODO: primitive types
-            if (!methodParamTypes[i].isAssignableFrom(paramTypes[i])) {
+            Class<?> methodParamType = primitives.getOrDefault(methodParamTypes[i], methodParamTypes[i]);
+            Class<?> paramType = primitives.getOrDefault(paramTypes[i], paramTypes[i]);
+
+            if (!methodParamType.isAssignableFrom(paramType)) {
                 return false;
             }
         }

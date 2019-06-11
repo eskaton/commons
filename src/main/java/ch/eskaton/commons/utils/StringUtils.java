@@ -104,14 +104,23 @@ public final class StringUtils {
     }
 
     public static String initCap(String s) {
-        if (s != null) {
+        if (s != null && s.length() > 0) {
             char c = s.charAt(0);
 
-            if (c >= 0x61 && c <= 0x7a) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(c &= ~0x20);
-                sb.append(s.substring(1));
-                return sb.toString();
+            if (Character.isLowerCase(c)) {
+                return new StringBuilder(s.length()).append(Character.toUpperCase(c)).append(s.substring(1)).toString();
+            }
+        }
+
+        return s;
+    }
+
+    public static String initDeCap(String s) {
+        if (s != null && s.length() > 0) {
+            char c = s.charAt(0);
+
+            if (Character.isUpperCase(c)) {
+                return new StringBuilder(s.length()).append(Character.toLowerCase(c)).append(s.substring(1)).toString();
             }
         }
 

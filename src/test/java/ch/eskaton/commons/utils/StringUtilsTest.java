@@ -59,6 +59,8 @@ import org.junit.Test;
 import static ch.eskaton.commons.utils.CollectionUtils.asHashSet;
 import static ch.eskaton.commons.utils.StringUtils.asString;
 import static ch.eskaton.commons.utils.StringUtils.ifPresent;
+import static ch.eskaton.commons.utils.StringUtils.initCap;
+import static ch.eskaton.commons.utils.StringUtils.initDeCap;
 import static ch.eskaton.commons.utils.StringUtils.inject;
 import static ch.eskaton.commons.utils.StringUtils.isEmpty;
 import static ch.eskaton.commons.utils.StringUtils.join;
@@ -118,6 +120,22 @@ public class StringUtilsTest {
         assertThat(ifPresent(null, o -> "null"), equalTo(""));
         assertThat(ifPresent(1, "one"), equalTo("one"));
         assertThat(ifPresent(1, o -> "one"), equalTo("one"));
+    }
+
+    @Test
+    public void testInitCap() {
+        assertThat(initCap(""), equalTo(""));
+        assertThat(initCap("A"), equalTo("A"));
+        assertThat(initCap("a"), equalTo("A"));
+        assertThat(initCap("abcDef"), equalTo("AbcDef"));
+    }
+
+    @Test
+    public void testInitDeCap() {
+        assertThat(initDeCap(""), equalTo(""));
+        assertThat(initDeCap("a"), equalTo("a"));
+        assertThat(initDeCap("A"), equalTo("a"));
+        assertThat(initDeCap("AbcDef"), equalTo("abcDef"));
     }
 
 }

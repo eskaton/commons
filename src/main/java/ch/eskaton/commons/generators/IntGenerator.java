@@ -29,6 +29,7 @@ package ch.eskaton.commons.generators;
 
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.stream.IntStream;
 
@@ -63,6 +64,10 @@ public class IntGenerator implements Iterator<Integer>, Iterable<Integer> {
 
     @Override
     public Integer next() {
+        if (!hasNext()) {
+            new NoSuchElementException();
+        }
+
         return iterator.nextInt();
     }
 

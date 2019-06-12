@@ -65,7 +65,7 @@ public class IntGenerator implements Iterator<Integer>, Iterable<Integer> {
     @Override
     public Integer next() {
         if (!hasNext()) {
-            new NoSuchElementException();
+            throw new NoSuchElementException();
         }
 
         return iterator.nextInt();

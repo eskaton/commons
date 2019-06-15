@@ -31,6 +31,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
+
 public class Sets {
 
     public static <V> Sets.Builder<V> builder() {
@@ -55,6 +57,12 @@ public class Sets {
 
         public Sets.Builder<V> add(V value) {
             set.add(value);
+
+            return this;
+        }
+
+        public Sets.Builder<V> addAll(V... values) {
+            set.addAll(asList(values));
 
             return this;
         }

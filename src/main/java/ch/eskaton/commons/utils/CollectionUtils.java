@@ -29,9 +29,10 @@ package ch.eskaton.commons.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class CollectionUtils {
 
@@ -42,40 +43,42 @@ public final class CollectionUtils {
         List<T> list = new ArrayList<T>(col.size());
 
         for (U value : col) {
-           list.add(mapper.map(value));
+            list.add(mapper.map(value));
         }
 
         return list;
-     }
+    }
 
-     public interface Mapper<U, T> {
+    public interface Mapper<U, T> {
+
         T map(U value);
-     }
+    }
 
-     public static <T, U> T foldr(Collection<U> col, T accumulator,
-           Folder<U, T> folder) {
+    public static <T, U> T foldr(Collection<U> col, T accumulator,
+            Folder<U, T> folder) {
         for (U value : col) {
-           accumulator = folder.fold(accumulator, value);
+            accumulator = folder.fold(accumulator, value);
         }
 
         return accumulator;
-     }
+    }
 
-     public interface Folder<U, T> {
+    public interface Folder<U, T> {
+
         T fold(T accumulator, U value);
-     }
+    }
 
-     public static String join(final Collection<?> c, final String glue) {
-         Iterator<?> it = c.iterator();
-         StringBuilder sb = new StringBuilder();
+    public static String join(final Collection<?> c, final String glue) {
+        Iterator<?> it = c.iterator();
+        StringBuilder sb = new StringBuilder();
 
-         while (it.hasNext()) {
-             sb.append(sb.length() > 0 ? glue + it.next().toString() : it.next()
-                     .toString());
-         }
+        while (it.hasNext()) {
+            sb.append(sb.length() > 0 ? glue + it.next().toString() : it.next()
+                    .toString());
+        }
 
-         return sb.toString();
-     }
+        return sb.toString();
+    }
 
     public static <T> HashSet<T> asHashSet(Collection<T> c) {
         HashSet<T> set = new HashSet<T>();
@@ -93,6 +96,34 @@ public final class CollectionUtils {
         set.addAll(Arrays.asList(c));
 
         return set;
+    }
+
+    public static <T> LinkedList<T> asLinkedList(Collection<T> c) {
+        LinkedList<T> list = new LinkedList<T>();
+
+        if (c != null) {
+            list.addAll(c);
+        }
+
+        return list;
+    }
+
+    public static <T> LinkedList<T> asLinkedList(T... c) {
+        LinkedList<T> list = new LinkedList<T>();
+
+        list.addAll(Arrays.asList(c));
+
+        return list;
+    }
+
+    public static Byte[] box(byte[] value) {
+        Byte[] boxed = new Byte[value.length];
+
+        for (int i = 0; i < boxed.length; i++) {
+            boxed[i] = value[i];
+        }
+
+        return boxed;
     }
 
 }

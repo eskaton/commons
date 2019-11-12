@@ -30,6 +30,7 @@ package ch.eskaton.commons.utils;
 import ch.eskaton.commons.collections.Tuple2;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -40,7 +41,7 @@ public class StreamsUtils {
     private StreamsUtils() {
     }
 
-    public static <T> Stream<Tuple2<Integer,T>> zipWithIndex(int startIdx, Stream<T> stream) {
+    public static <T> Stream<Tuple2<Integer, T>> zipWithIndex(int startIdx, Stream<T> stream) {
         Iterator<Integer> it = IntStream.range(startIdx, Integer.MAX_VALUE).boxed().iterator();
 
         return stream.map(o -> new Tuple2<>(it.next(), o));
@@ -71,6 +72,10 @@ public class StreamsUtils {
     public static <T> Stream<T> of(Iterator<T> iterator) {
         Iterable<T> iterable = () -> iterator;
         return StreamSupport.stream(iterable.spliterator(), false);
+    }
+
+    public static <T> Stream<T> fromIndex(List<T> collection, int index) {
+        return of(collection.listIterator(index));
     }
 
     public static IntStream toIntStream(byte[] bytes) {

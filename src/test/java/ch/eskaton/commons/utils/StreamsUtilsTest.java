@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -55,6 +56,17 @@ public class StreamsUtilsTest {
         assertThat(result, hasItem(new Tuple2<>(1, "a")));
         assertThat(result, hasItem(new Tuple2<>(2, "b")));
         assertThat(result, hasItem(new Tuple2<>(3, "c")));
+    }
+
+    @Test
+    public void testFromIndex() {
+        assertEquals(Arrays.asList(3, 4, 5),
+                StreamsUtils.fromIndex(Arrays.asList(1, 2, 3, 4, 5), 2).collect(Collectors.toList()));
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testFromIndexOutOfBounds() {
+        StreamsUtils.fromIndex(Arrays.asList(1, 2, 3, 4, 5), 6).collect(Collectors.toList());
     }
 
 }

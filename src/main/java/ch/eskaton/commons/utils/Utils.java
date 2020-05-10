@@ -37,4 +37,14 @@ public class Utils {
         return object;
     }
 
+    public static Throwable rootCause(Throwable th) {
+        Throwable rootCause = th;
+
+        while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+            rootCause = rootCause.getCause();
+        }
+
+        return rootCause;
+    }
+
 }

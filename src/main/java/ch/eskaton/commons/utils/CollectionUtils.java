@@ -40,7 +40,7 @@ public final class CollectionUtils {
     }
 
     public static <T, U> List<T> map(Collection<U> col, Mapper<U, T> mapper) {
-        List<T> list = new ArrayList<T>(col.size());
+        List<T> list = new ArrayList<>(col.size());
 
         for (U value : col) {
             list.add(mapper.map(value));
@@ -81,7 +81,7 @@ public final class CollectionUtils {
     }
 
     public static <T> HashSet<T> asHashSet(Collection<T> c) {
-        HashSet<T> set = new HashSet<T>();
+        HashSet<T> set = new HashSet<>();
 
         if (c != null) {
             set.addAll(c);
@@ -91,7 +91,7 @@ public final class CollectionUtils {
     }
 
     public static <T> HashSet<T> asHashSet(T... c) {
-        HashSet<T> set = new HashSet<T>();
+        HashSet<T> set = new HashSet<>();
 
         set.addAll(Arrays.asList(c));
 
@@ -99,7 +99,7 @@ public final class CollectionUtils {
     }
 
     public static <T> LinkedList<T> asLinkedList(Collection<T> c) {
-        LinkedList<T> list = new LinkedList<T>();
+        LinkedList<T> list = new LinkedList<>();
 
         if (c != null) {
             list.addAll(c);
@@ -109,7 +109,7 @@ public final class CollectionUtils {
     }
 
     public static <T> LinkedList<T> asLinkedList(T... c) {
-        LinkedList<T> list = new LinkedList<T>();
+        LinkedList<T> list = new LinkedList<>();
 
         list.addAll(Arrays.asList(c));
 

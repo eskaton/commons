@@ -32,6 +32,7 @@ import ch.eskaton.commons.collections.Tuple2;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -76,6 +77,14 @@ public class StreamsUtils {
 
     public static <T> Stream<T> fromIndex(List<T> collection, int index) {
         return of(collection.listIterator(index));
+    }
+
+    public static <T> int indexOf(java.util.Collection<T> collection, Predicate<T> predicate) {
+        return StreamsUtils.zip(IntStream.range(0, collection.size()).boxed(), collection.stream())
+                .filter(t -> predicate.test(t.get_2()))
+                .findFirst()
+                .map(t -> t.get_1())
+                .orElse(-1);
     }
 
     public static IntStream toIntStream(byte[] bytes) {

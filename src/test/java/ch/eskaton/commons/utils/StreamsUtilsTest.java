@@ -33,6 +33,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -62,6 +63,13 @@ public class StreamsUtilsTest {
     public void testFromIndex() {
         assertEquals(Arrays.asList(3, 4, 5),
                 StreamsUtils.fromIndex(Arrays.asList(1, 2, 3, 4, 5), 2).collect(Collectors.toList()));
+    }
+
+    @Test
+    public void testIndexOf() {
+        assertEquals(0, StreamsUtils.indexOf(Arrays.asList(1, 2, 3, 4, 5), o -> Objects.equals(o, 1)));
+        assertEquals(4, StreamsUtils.indexOf(Arrays.asList(1, 2, 3, 4, 5), o -> Objects.equals(o, 5)));
+        assertEquals(-1, StreamsUtils.indexOf(Arrays.asList(1, 2, 3, 4, 5), o -> Objects.equals(o, 6)));
     }
 
     @Test(expected = IndexOutOfBoundsException.class)

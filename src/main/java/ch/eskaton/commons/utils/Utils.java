@@ -28,6 +28,7 @@
 package ch.eskaton.commons.utils;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Utils {
 
@@ -35,6 +36,10 @@ public class Utils {
         consumer.accept(object);
 
         return object;
+    }
+
+    public static <T, R> R callWith(Function<T, R> function, T object) {
+        return function.apply(object);
     }
 
     public static Throwable rootCause(Throwable th) {

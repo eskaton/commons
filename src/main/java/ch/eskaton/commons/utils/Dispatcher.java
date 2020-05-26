@@ -35,6 +35,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Dispatcher<T, U, A, R> {
 
@@ -54,6 +55,14 @@ public class Dispatcher<T, U, A, R> {
     public Dispatcher<T, U, A, R> withCase(U clazz, Function<Optional<A>, R> function) {
         cases.add((typeEquals, type, args) -> typeEquals.test(type, clazz) ?
                 Optional.of(function.apply(args)) :
+                Optional.empty());
+
+        return this;
+    }
+
+    public Dispatcher<T, U, A, R> withCase(U clazz, Supplier<R> supplier) {
+        cases.add((typeEquals, type, args) -> typeEquals.test(type, clazz) ?
+                Optional.of(supplier.get()) :
                 Optional.empty());
 
         return this;

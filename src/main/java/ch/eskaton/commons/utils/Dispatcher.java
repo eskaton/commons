@@ -43,11 +43,19 @@ public class Dispatcher<T, U, A, R> {
 
     private List<TriFunction<BiPredicate<T, U>, T, Optional<A>, Optional<R>>> cases = new ArrayList<>();
 
+    private Optional<Function<T, ? extends RuntimeException>> exception = Optional.empty();
+
     public Dispatcher() {
     }
 
     public Dispatcher<T, U, A, R> withComparator(BiPredicate<T, U> typeEquals) {
         this.typeEquals = Optional.of(typeEquals);
+
+        return this;
+    }
+
+    public Dispatcher<T, U, A, R> withException(Function<T, ? extends RuntimeException> exception) {
+        this.exception = Optional.of(exception);
 
         return this;
     }
@@ -77,7 +85,10 @@ public class Dispatcher<T, U, A, R> {
                 .map(f -> f.apply(typeEquals.orElseGet(() -> Objects::equals), type, Optional.ofNullable(args)))
                 .filter(Optional::isPresent)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException(String.format("Failed to dispatch on %s", type))).get();
+                .orElseThrow(() -> exception.isPresent() ?
+                        exception.get().apply(type) :
+                        new IllegalStateException(String.format("Failed to dispatch on %s", type))
+                ).get();
     }
 
 }

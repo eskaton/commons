@@ -37,52 +37,97 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Dispatcher<T, U, A, R> {
+/**
+ * Dispatcher provides switch/case logic based on a predicate, which allows comparisons that are not possible
+ * with the primitive control structure.
+ *
+ * @param <T> The type of the object on which to dispatch
+ * @param <C> The type of the object associated with the cases
+ * @param <A> The type of the argument of the function to be called
+ * @param <R> The type of the result
+ */
+public class Dispatcher<T, C, A, R> {
 
-    private Optional<BiPredicate<T, U>> typeEquals = Optional.empty();
+    private Optional<BiPredicate<T, C>> typeEquals = Optional.empty();
 
-    private List<TriFunction<BiPredicate<T, U>, T, Optional<A>, Optional<R>>> cases = new ArrayList<>();
+    private List<TriFunction<BiPredicate<T, C>, T, Optional<A>, Optional<R>>> cases = new ArrayList<>();
 
     private Optional<Function<T, ? extends RuntimeException>> exception = Optional.empty();
 
-    public Dispatcher() {
-    }
-
-    public Dispatcher<T, U, A, R> withComparator(BiPredicate<T, U> typeEquals) {
+    /**
+     * Set a custom predicate to compare types T and U.
+     *
+     * @param typeEquals a predicate
+     * @return the dispatcher
+     */
+    public Dispatcher<T, C, A, R> withComparator(BiPredicate<T, C> typeEquals) {
         this.typeEquals = Optional.of(typeEquals);
 
         return this;
     }
 
-    public Dispatcher<T, U, A, R> withException(Function<T, ? extends RuntimeException> exception) {
+    /**
+     * Set a custom exception to be thrown when no case matches.
+     *
+     * @param exception an exception
+     * @return the dispatcher
+     */
+    public Dispatcher<T, C, A, R> withException(Function<T, ? extends RuntimeException> exception) {
         this.exception = Optional.of(exception);
 
         return this;
     }
 
-    public Dispatcher<T, U, A, R> withCase(U clazz, Function<Optional<A>, R> function) {
-        cases.add((typeEquals, type, args) -> typeEquals.test(type, clazz) ?
+    /**
+     * Defines a function to be called when object matches.
+     *
+     * @param object   the object to match on
+     * @param function function to be called
+     * @return the dispatcher
+     */
+    public Dispatcher<T, C, A, R> withCase(C object, Function<Optional<A>, R> function) {
+        cases.add((predicate, type, args) -> predicate.test(type, object) ?
                 Optional.of(function.apply(args)) :
                 Optional.empty());
 
         return this;
     }
 
-    public Dispatcher<T, U, A, R> withCase(U clazz, Supplier<R> supplier) {
-        cases.add((typeEquals, type, args) -> typeEquals.test(type, clazz) ?
+    /**
+     * Defines a supplier to be called when object matches.
+     *
+     * @param object   an object to match on
+     * @param supplier supplier to be called
+     * @return the dispatcher
+     */
+    public Dispatcher<T, C, A, R> withCase(C object, Supplier<R> supplier) {
+        cases.add((predicate, type, args) -> predicate.test(type, object) ?
                 Optional.of(supplier.get()) :
                 Optional.empty());
 
         return this;
     }
 
+    /**
+     * Executes the dispatcher with a type.
+     *
+     * @param type the type on which to dispatch
+     * @return the result of the function
+     */
     public R execute(T type) {
         return execute(type, null);
     }
 
-    public R execute(T type, A args) {
+    /**
+     * Executes the dispatcher with a type and an argument to be passed to the executed function.
+     *
+     * @param type the type
+     * @param arg  the argument
+     * @return the returned value of the called function
+     */
+    public R execute(T type, A arg) {
         return cases.stream()
-                .map(f -> f.apply(typeEquals.orElseGet(() -> Objects::equals), type, Optional.ofNullable(args)))
+                .map(f -> f.apply(typeEquals.orElseGet(() -> Objects::equals), type, Optional.ofNullable(arg)))
                 .filter(Optional::isPresent)
                 .findFirst()
                 .orElseThrow(() -> exception.isPresent() ?

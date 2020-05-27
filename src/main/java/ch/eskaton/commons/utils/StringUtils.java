@@ -132,11 +132,7 @@ public final class StringUtils {
     }
 
     public static boolean isEmpty(String s) {
-        if (s == null || s.length() == 0) {
-            return true;
-        }
-
-        return false;
+        return s == null || s.length() == 0;
     }
 
     public static String asString(Object obj) {

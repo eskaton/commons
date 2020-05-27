@@ -30,7 +30,7 @@ package ch.eskaton.commons.utils;
 import org.junit.Test;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 
 import static org.junit.Assert.assertEquals;
 
@@ -38,7 +38,7 @@ public class OptionalUtilsTest {
 
     @Test
     public void testCombine() {
-        BiFunction<Integer, Integer, Integer> add = (Integer a, Integer b) -> a + b;
+        BinaryOperator<Integer> add = (Integer a, Integer b) -> a + b;
 
         assertEquals(Optional.empty(), OptionalUtils.combine(Optional.empty(), Optional.empty(), add));
         assertEquals(Optional.of(12), OptionalUtils.combine(Optional.of(12), Optional.empty(), add));

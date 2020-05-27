@@ -36,7 +36,10 @@ public class HexDump {
 
     private static final int BYTES_PER_LINE = 4 * BYTES_PER_WORD;
 
-    public static String toHexString(byte buf[]) {
+    private HexDump() {
+    }
+
+    public static String toHexString(byte[] buf) {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < buf.length; i++) {
@@ -50,65 +53,64 @@ public class HexDump {
         return String.format("%02x", b);
     }
 
-    public static String dumpToString(byte buf[]) throws IOException {
+    public static String dumpToString(byte[] buf) throws IOException {
         StringWriter sw = new StringWriter();
         dump(sw, buf);
         return sw.toString();
     }
 
-    public static String dumpToString(byte buf[], int offset, int len)
+    public static String dumpToString(byte[] buf, int offset, int len)
             throws IOException {
         StringWriter sw = new StringWriter();
         dump(sw, buf, offset, len);
         return sw.toString();
     }
 
-    public static void dump(Writer w, byte buf[]) throws IOException {
+    public static void dump(Writer w, byte[] buf) throws IOException {
         dump(w, buf, 0, buf.length);
     }
 
-    public static void dump(Writer w, byte buf[], int offset, int len)
+    public static void dump(Writer w, byte[] buf, int offset, int len)
             throws IOException {
         int lines = len / BYTES_PER_LINE;
-        int last_len = len % BYTES_PER_LINE;
-        int addr_len = (int) Math.floor(Math.log(len)
+        int lastLen = len % BYTES_PER_LINE;
+        int addrLen = (int) Math.floor(Math.log(len)
                 / Math.log(BYTES_PER_LINE) + 1);
         int addr = offset;
 
         for (int i = 0; i < lines; i++) {
-            dumpLine(w, buf, addr, addr_len, BYTES_PER_LINE);
+            dumpLine(w, buf, addr, addrLen, BYTES_PER_LINE);
             addr += BYTES_PER_LINE;
         }
 
-        if (last_len > 0) {
-            dumpLine(w, buf, addr, addr_len, last_len);
+        if (lastLen > 0) {
+            dumpLine(w, buf, addr, addrLen, lastLen);
         }
 
         w.flush();
     }
 
-    private static void dumpLine(Writer w, byte[] buf, int addr, int addr_len,
-            int len) throws IOException {
+    private static void dumpLine(Writer w, byte[] buf, int addr, int addrLen, int len) throws IOException {
         int words = len / BYTES_PER_WORD;
-        int last_word = len % BYTES_PER_WORD;
+        int lastWord = len % BYTES_PER_WORD;
         int pos = addr;
-        int line_pos = 0;
+        int linePos = 0;
 
-        String format = String.format("%%0%dx", addr_len);
+        String format = String.format("%%0%dx", addrLen);
 
         w.append(String.format(format, addr)).append(" ");
 
         for (int i = 0; i < words; i++) {
-            line_pos += dumpWord(w, buf, pos, BYTES_PER_WORD);
+            linePos += dumpWord(w, buf, pos, BYTES_PER_WORD);
             pos += BYTES_PER_WORD;
         }
 
-        if (last_word > 0) {
-            line_pos += dumpWord(w, buf, pos, last_word);
+        if (lastWord > 0) {
+            linePos += dumpWord(w, buf, pos, lastWord);
         }
 
         format = String.format("%%%ds", BYTES_PER_LINE * 2 + BYTES_PER_LINE
-                / BYTES_PER_WORD - line_pos + 2);
+                / BYTES_PER_WORD - linePos + 2);
 
         w.append(String.format(format, "| "));
 
@@ -124,19 +126,18 @@ public class HexDump {
         w.append("\n");
     }
 
-    private static int dumpWord(Writer w, byte[] buf, int pos, int bytesPerWord)
-            throws IOException {
+    private static int dumpWord(Writer w, byte[] buf, int pos, int bytesPerWord) throws IOException {
         int i;
-        int word_len = 0;
+        int wordLen = 0;
 
         for (i = 0; i < bytesPerWord; i++) {
             w.append(String.format("%02x", buf[pos + i]));
-            word_len += 2;
+            wordLen += 2;
         }
 
         w.append(" ");
 
-        return word_len + 1;
+        return wordLen + 1;
     }
 
 }

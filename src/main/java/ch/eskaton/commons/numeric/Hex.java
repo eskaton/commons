@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2013, Adrian Moser
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *  * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
  *  * Neither the name of the author nor the
  *  names of its contributors may be used to endorse or promote products
  *  derived from this software without specific prior written permission.
- * 
+ *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,71 +31,66 @@ package ch.eskaton.commons.numeric;
  */
 public final class Hex {
 
-	private static final int ASCII_ZERO = 48;
+    private static final int ASCII_ZERO = 48;
 
-	private static final int ASCII_SMALL_A = 97;
+    private static final int ASCII_SMALL_A = 97;
 
-	private static final int ASCII_SMALL_A_OFFSET = 87;
+    private static final int ASCII_SMALL_A_OFFSET = 87;
 
-	private static final int BASE = 16;
+    private static final int BASE = 16;
 
-	private static final int POWER = 4;
+    private static final int POWER = 4;
 
-	private static char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
-			'9', 'A', 'B', 'C', 'D', 'E', 'F' };
+    private static final char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
+            '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-	private Hex() {
-	}
+    private Hex() {
+    }
 
-	/**
-	 * Translates hex to decimal.
-	 * 
-	 * @param hex
-	 *            A hexadecimal number
-	 * @return decimal number
-	 * @throws ConversionNotSupportedException
-	 */
-	public static double hex2decimal(final String hex)
-			throws ConversionNotSupportedException {
-		double value = 0;
+    /**
+     * Translates hex to decimal.
+     *
+     * @param hex A hexadecimal number
+     * @return decimal number
+     */
+    public static double hex2decimal(final String hex) {
+        double value = 0;
 
-		String hexNum = hex.substring(2).toLowerCase();
+        String hexNum = hex.substring(2).toLowerCase();
 
-		for (int i = hexNum.length() - 1, p = 0; i >= 0; i--, p++) {
-			int chr = hexNum.charAt(i);
-			value += (chr >= ASCII_SMALL_A ? chr - ASCII_SMALL_A_OFFSET
-					: chr - ASCII_ZERO) * (1 << (p << 2));
-		}
+        for (int i = hexNum.length() - 1, p = 0; i >= 0; i--, p++) {
+            int chr = hexNum.charAt(i);
+            value += (chr >= ASCII_SMALL_A ? chr - ASCII_SMALL_A_OFFSET
+                    : chr - ASCII_ZERO) * (1 << (p << 2));
+        }
 
-		return value;
-	}
+        return value;
+    }
 
-	/**
-	 * Translates decimal to hex.
-	 * 
-	 * @param dec
-	 *            A decimal number
-	 * @return hex number
-	 * @throws ConversionNotSupportedException
-	 */
-	public static String decimal2hex(final double dec)
-			throws ConversionNotSupportedException {
-		if (dec != Math.round(dec)) {
-			throw new ConversionNotSupportedException();
-		}
+    /**
+     * Translates decimal to hex.
+     *
+     * @param dec A decimal number
+     * @return hex number
+     * @throws ConversionNotSupportedException
+     */
+    public static String decimal2hex(final double dec) throws ConversionNotSupportedException {
+        if (dec != Math.round(dec)) {
+            throw new ConversionNotSupportedException();
+        }
 
-		StringBuffer sb = new StringBuffer();
-		long decimal = (long) dec;
-		int remainder;
+        StringBuilder sb = new StringBuilder();
+        long decimal = (long) dec;
+        int remainder;
 
-		while (decimal != 0) {
-			remainder = (int) decimal % BASE;
-			sb.insert(0, HEX[remainder]);
-			decimal -= remainder;
-			decimal >>= POWER;
-		}
+        while (decimal != 0) {
+            remainder = (int) decimal % BASE;
+            sb.insert(0, HEX[remainder]);
+            decimal -= remainder;
+            decimal >>= POWER;
+        }
 
-		return "0x" + sb.toString();
-	}
+        return "0x" + sb.toString();
+    }
 
 }

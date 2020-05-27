@@ -28,14 +28,14 @@
 package ch.eskaton.commons.utils;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 
 public class OptionalUtils {
 
     private OptionalUtils() {
     }
 
-    public static <T> Optional<T> combine(Optional<T> left, Optional<T> right, BiFunction<T, T, T> combine) {
+    public static <T> Optional<T> combine(Optional<T> left, Optional<T> right, BinaryOperator<T> combine) {
         if (left.isPresent()) {
             if (right.isPresent()) {
                 return Optional.of(combine.apply(left.get(), right.get()));

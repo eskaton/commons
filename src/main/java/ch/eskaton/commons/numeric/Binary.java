@@ -43,10 +43,8 @@ public final class Binary {
 	 * @param bits
 	 *            Number of bits to take into account
 	 * @return String representation of <code>bin</code> for <code>bits</code>
-	 * @throws ConversionNotSupportedException
-	 */
-	public static String binary2string(final long bin, final int bits)
-			throws ConversionNotSupportedException {
+     */
+	public static String binary2string(final long bin, final int bits) {
 		StringBuilder sb = new StringBuilder(bits);
 		long mask = 1 << (bits - 1);
 

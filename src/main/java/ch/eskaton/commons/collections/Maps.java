@@ -27,27 +27,32 @@
 
 package ch.eskaton.commons.collections;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Maps {
 
     public static <K, V> Builder<K, V> builder() {
-        return new Builder(HashMap.class);
+        return new Builder<>(HashMap.class);
     }
 
     public static <K, V> Builder<K, V> builder(Class<? extends Map> clazz) {
-        return new Builder(clazz);
+        return new Builder<>(clazz);
+    }
+
+    private Maps() {
     }
 
     public static class Builder<K, V> {
 
         private Map<K, V> map;
 
-        public Builder(Class<HashMap> clazz) {
+        public Builder(Class<? extends Map> clazz) {
             try {
-                map = clazz.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
+                map = clazz.getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException |
+                    NoSuchMethodException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         }

@@ -83,7 +83,7 @@ public class StreamsUtils {
         return StreamsUtils.zip(IntStream.range(0, collection.size()).boxed(), collection.stream())
                 .filter(t -> predicate.test(t.get_2()))
                 .findFirst()
-                .map(t -> t.get_1())
+                .map(Tuple2::get_1)
                 .orElse(-1);
     }
 

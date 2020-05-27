@@ -27,6 +27,7 @@
 
 package ch.eskaton.commons.collections;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,21 +37,25 @@ import static java.util.Arrays.asList;
 public class Sets {
 
     public static <V> Sets.Builder<V> builder() {
-        return new Sets.Builder(HashSet.class);
+        return new Sets.Builder<>(HashSet.class);
     }
 
     public static <V> Sets.Builder<V> builder(Class<? extends Set> clazz) {
-        return new Sets.Builder(clazz);
+        return new Sets.Builder<>(clazz);
+    }
+
+    private Sets() {
     }
 
     public static class Builder<V> {
 
         private Set<V> set;
 
-        public Builder(Class<Set> clazz) {
+        public Builder(Class<? extends Set> clazz) {
             try {
-                set = clazz.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
+                set = clazz.getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException |
+                    NoSuchMethodException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         }

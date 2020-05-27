@@ -32,6 +32,9 @@ import java.util.function.Function;
 
 public class Utils {
 
+    private Utils() {
+    }
+
     public static <T> T with(T object, Consumer<T> consumer) {
         consumer.accept(object);
 

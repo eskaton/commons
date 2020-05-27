@@ -10,7 +10,7 @@ addons:
 install: true
 
 script:
-   - mvn -e -B clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=eskaton_commons
+   - mvn -e -B clean org.jacoco:jacoco-maven-plugin:prepare-agent install org.jacoco:jacoco-maven-plugin:report sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=eskaton_commons
 
 cache:
    directories:

@@ -27,6 +27,7 @@
 
 package ch.eskaton.commons.collections;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -35,21 +36,25 @@ import java.util.List;
 public class Lists {
 
     public static <V> Lists.Builder<V> builder() {
-        return new Lists.Builder(ArrayList.class);
+        return new Lists.Builder<>(ArrayList.class);
     }
 
     public static <V> Lists.Builder<V> builder(Class<? extends List> clazz) {
-        return new Lists.Builder(clazz);
+        return new Lists.Builder<>(clazz);
+    }
+
+    private Lists() {
     }
 
     public static class Builder<V> {
 
         private List<V> list;
 
-        public Builder(Class<List> clazz) {
+        public Builder(Class<? extends List> clazz) {
             try {
-                list = clazz.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
+                list = clazz.getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException |
+                    NoSuchMethodException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         }

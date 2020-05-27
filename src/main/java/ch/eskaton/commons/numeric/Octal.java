@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2013, Adrian Moser
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *  * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
  *  * Neither the name of the author nor the
  *  names of its contributors may be used to endorse or promote products
  *  derived from this software without specific prior written permission.
- * 
+ *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -40,14 +40,11 @@ public final class Octal {
 
     /**
      * Translates octal to decimal
-     * 
-     * @param octal
-     *            An octal number
+     *
+     * @param octal An octal number
      * @return decimal number
-     * @throws ConversionNotSupportedException
      */
-    public static double octal2decimal(final String octal)
-            throws ConversionNotSupportedException {
+    public static double octal2decimal(final String octal) {
         double value = 0;
 
         for (int i = octal.length() - 1, p = 0; i >= 0; i--, p++) {
@@ -60,19 +57,17 @@ public final class Octal {
 
     /**
      * Translates decimal to octal.
-     * 
-     * @param dec
-     *            A decimal number
+     *
+     * @param dec A decimal number
      * @return hex number
      * @throws ConversionNotSupportedException
      */
-    public static String decimal2octal(final double dec)
-            throws ConversionNotSupportedException {
+    public static String decimal2octal(final double dec) throws ConversionNotSupportedException {
         if (dec != Math.round(dec)) {
             throw new ConversionNotSupportedException();
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         long decimal = (long) dec;
         int remainder;
 

@@ -119,9 +119,7 @@ public final class CollectionUtils {
     public static Byte[] box(byte[] value) {
         Byte[] boxed = new Byte[value.length];
 
-        for (int i = 0; i < boxed.length; i++) {
-            boxed[i] = value[i];
-        }
+        Arrays.setAll(boxed, i -> value[i]);
 
         return boxed;
     }

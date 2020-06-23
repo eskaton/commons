@@ -37,6 +37,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class ReflectionUtils {
 
@@ -227,6 +228,16 @@ public final class ReflectionUtils {
         } while ((clazz = clazz.getSuperclass()) != null && !Object.class.equals(clazz));
 
         return properties;
+    }
+
+
+    public static <T> T getInstance(Class<T> clazz, Function<Exception, RuntimeException> exceptionHandler) {
+        try {
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException |
+                NoSuchMethodException | InvocationTargetException e) {
+            throw exceptionHandler.apply(e);
+        }
     }
 
 }

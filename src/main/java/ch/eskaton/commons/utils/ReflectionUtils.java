@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class ReflectionUtils {
 
@@ -208,12 +209,18 @@ public final class ReflectionUtils {
     }
 
     public static List<Tuple2<String, Object>> getProperties(Object obj) throws IllegalAccessException {
-        List<Tuple2<String, Object>> properties = new ArrayList<>();
+        return getPropertiesSource(obj).stream()
+                .map(t -> Tuple2.of(t.get_1().get_2(), t.get_2()))
+                .collect(Collectors.toList());
+    }
+
+    public static List<Tuple2<Tuple2<Class, String>, Object>> getPropertiesSource(Object obj)
+            throws IllegalAccessException {
+        List<Tuple2<Tuple2<Class, String>, Object>> properties = new ArrayList<>();
         Class<?> clazz = obj.getClass();
 
         do {
             Field[] fields = clazz.getDeclaredFields();
-
 
             for (Field field : fields) {
                 if (field.isSynthetic() || Modifier.isStatic(field.getModifiers())) {
@@ -222,14 +229,13 @@ public final class ReflectionUtils {
 
                 field.setAccessible(true);
 
-                properties.add(new Tuple2<>(field.getName(), field.get(obj)));
+                properties.add(Tuple2.of(Tuple2.of(clazz, field.getName()), field.get(obj)));
             }
 
         } while ((clazz = clazz.getSuperclass()) != null && !Object.class.equals(clazz));
 
         return properties;
     }
-
 
     public static <T> T getInstance(Class<T> clazz, Function<Exception, RuntimeException> exceptionHandler) {
         try {

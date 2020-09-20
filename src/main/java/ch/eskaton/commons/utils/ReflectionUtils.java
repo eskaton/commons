@@ -30,6 +30,7 @@ import ch.eskaton.commons.collections.Maps;
 import ch.eskaton.commons.collections.Tuple2;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -239,7 +240,11 @@ public final class ReflectionUtils {
 
     public static <T> T getInstance(Class<T> clazz, Function<Exception, RuntimeException> exceptionHandler) {
         try {
-            return clazz.getDeclaredConstructor().newInstance();
+            Constructor<T> constructor = clazz.getDeclaredConstructor();
+
+            constructor.setAccessible(true);
+
+            return constructor.newInstance();
         } catch (InstantiationException | IllegalAccessException |
                 NoSuchMethodException | InvocationTargetException e) {
             throw exceptionHandler.apply(e);

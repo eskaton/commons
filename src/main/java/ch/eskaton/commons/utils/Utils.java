@@ -35,14 +35,47 @@ public class Utils {
     private Utils() {
     }
 
+    /**
+     * Calls a consumer with the provided object as its argument and returns the object.
+     *
+     * @param object   An object
+     * @param consumer A consumer of the object
+     * @param <T>      The type of the object
+     * @return The original object which has possibly been modified by the consumer.
+     */
     public static <T> T with(T object, Consumer<T> consumer) {
         consumer.accept(object);
 
         return object;
     }
 
-    public static <T, R> R callWith(Function<T, R> function, T object) {
-        return function.apply(object);
+    /**
+     * Calls a function with an argument and returns its return value.
+     *
+     * @param function A function
+     * @param arg      The argument of the function
+     * @param <T>      The type of the argument
+     * @param <R>      The type of the return value
+     * @return The value returned by the called function
+     */
+    public static <T, R> R callWith(Function<T, R> function, T arg) {
+        return function.apply(arg);
+    }
+
+    /**
+     * Calls a consumer with an argument where a function is expected and returns a default value.
+     *
+     * @param consumer    A consumer
+     * @param arg         The argument of the consumer
+     * @param returnValue A default return value
+     * @param <T>         The type of the argument
+     * @param <R>         The type of the return value
+     * @return A default value to return
+     */
+    public static <T, R> R callWithConsumer(Consumer<T> consumer, T arg, R returnValue) {
+        consumer.accept(arg);
+
+        return returnValue;
     }
 
     public static Throwable rootCause(Throwable th) {

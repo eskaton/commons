@@ -37,6 +37,10 @@ public class MutableReference<T> extends ImmutableReference<T> {
         super(ref);
     }
 
+    public static <T> MutableReference<T> of(T ref) {
+        return new MutableReference<>(ref);
+    }
+
     public void set(T ref) {
         this.ref = ref;
     }

@@ -37,6 +37,10 @@ public class ImmutableReference<T> implements Reference<T> {
         this.ref = ref;
     }
 
+    public static <T> ImmutableReference<T> of(T ref) {
+        return new ImmutableReference<>(ref);
+    }
+
     @Override
     public T get() {
         return ref;
